@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音乐播放器示例</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            color: #3b82f6;
+            margin-bottom: 0.5rem;
+        }
+        .content {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .code-block {
+            background-color: #f1f5f9;
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        pre {
+            margin: 0;
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            font-size: 14px;
+        }
+        .example-section {
+            margin-bottom: 2rem;
+        }
+        h2 {
+            color: #1e293b;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+        p {
+            line-height: 1.6;
+            color: #334155;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+        }
+        .btn:hover {
+            background-color: #2563eb;
+        }
+        .demo-container {
+            height: 1000px;
+            background-color: #f1f5f9;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 2rem;
+            position: relative;
+        }
+        .demo-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .demo-text {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>音乐播放器模块使用示例</h1>
+            <p>一个可通过CDN引入的音乐播放器，固定在窗口底部</p>
+        </header>
+
+        <div class="content">
+            <h2>快速开始</h2>
+            <p>只需两步即可在您的网页中添加音乐播放器：</p>
+            
+            <div class="example-section">
+                <h3>1. 引入必要的资源</h3>
+                <div class="code-block">
+                    <pre>&lt;!-- Bootstrap Icons (用于播放器图标) --&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"&gt;
+
+&lt;!-- 音乐播放器JS (从CDN引入) --&gt;
+&lt;script src="https://unpkg.com/zm-music-player"&gt;&lt;/script&gt;</pre>
+                </div>
+            </div>
+
+            <div class="example-section">
+                <h3>2. 初始化播放器</h3>
+                <div class="code-block">
+                    <pre>&lt;script&gt;
+    document.addEventListener('DOMContentLoaded', function() {
+        // 创建播放器实例
+        const player = new MusicPlayer({
+            apiEndpoint: '/api/music',  // 您的音乐API端点
+            directory: './music',       // 音乐目录
+            autoplay: false,            // 是否自动播放
+            theme: {
+                primary: '#3b82f6',     // 主色调
+                secondary: '#64748b'    // 次要色调
+            }
+        });
+    });
+&lt;/script&gt;</pre>
+                </div>
+            </div>
+
+            <h2>配置选项</h2>
+            <p>音乐播放器支持以下配置选项：</p>
+            <div class="code-block">
+                <pre>const defaultConfig = {
+    mountPoint: null,           // 挂载点DOM元素或选择器
+    apiEndpoint: '/api/music',  // API端点
+    position: 'bottom',         // 位置: 'bottom'
+    height: '80px',             // 播放器高度
+    autoplay: false,            // 自动播放
+    theme: {
+        primary: '#3b82f6',     // 主色调
+        secondary: '#64748b',   // 次要色调
+        dark: '#1e293b',        // 深色
+        light: '#f9fafb',       // 浅色
+        text: '#1e293b'         // 文本色
+    }
+};</pre>
+            </div>
+
+            <h1><strong>注意：</strong>此组件应搭配后端程序使用</h1>
+            <p>音乐播放器后端提供以下API端点：</p>
+            <ul>
+                <li><strong>{apiEndpoint}/batch?directory={directory}</strong> - 获取指定目录下的所有音乐文件</li>
+                <li><strong>{apiEndpoint}/file?path={filename}</strong> - 获取指定音乐文件的内容</li>
+            </ul>
+            <p>API返回格式示例：</p>
+            <div class="code-block">
+                <pre>// /api/music/batch?directory=./music 的返回格式
+{
+    "success": true,
+    "files": [
+        {
+            "filename": "song1.mp3",
+            "filepath": "./music/song1.mp3",
+            "title": "歌曲名称",
+            "artist": "艺术家",
+            "album": "专辑名",
+            "duration": 180 // 秒
+        },
+        // 更多歌曲...
+    ]
+}</pre>
+            </div>
+        </div>
+
+        <div class="demo-container">
+            <div class="demo-content">
+                <h2>演示区域</h2>
+                <p class="demo-text">这是一个示例页面，音乐播放器固定在窗口底部。向下滚动查看播放器如何保持在底部而不影响内容浏览。</p>
+                <p class="demo-text">点击右下角的音乐图标可以显示/隐藏播放器。</p>
+                
+                <div id="custom-mount-point"></div>
+                
+                <button id="toggle-player" class="btn">显示/隐藏播放器</button>
+                <button id="change-theme" class="btn">更换主题色</button>
+                
+                <!-- 生成一些演示内容 -->
+                <div id="demo-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入音乐播放器 -->
+    <script src="https://unpkg.com/zm-music-player"></script>
+    <script>
+        // 初始化播放器
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建播放器实例
+            const player = new MusicPlayer({
+                apiEndpoint: 'http://127.0.0.1:3000/api/music',  // 您的音乐API端点
+                autoplay: false,            // 是否自动播放
+                theme: {
+                    primary: '#3b82f6',     // 主色调
+                    secondary: '#64748b'    // 次要色调
+                }
+            });
+            
+            // 生成一些演示内容
+            const demoContent = document.getElementById('demo-content');
+            for (let i = 0; i < 10; i++) {
+                const paragraph = document.createElement('p');
+                paragraph.className = 'demo-text';
+                paragraph.textContent = '这是演示内容，用于展示音乐播放器如何固定在窗口底部而不影响页面浏览。滚动页面时，播放器会始终保持在底部。';
+                demoContent.appendChild(paragraph);
+            }
+            
+            // 主题切换按钮
+            document.getElementById('change-theme').addEventListener('click', function() {
+                const themes = [
+                    { primary: '#3b82f6', secondary: '#64748b' }, // 蓝色
+                    { primary: '#10b981', secondary: '#64748b' }, // 绿色
+                    { primary: '#f59e0b', secondary: '#64748b' }, // 黄色
+                    { primary: '#ef4444', secondary: '#64748b' }, // 红色
+                    { primary: '#8b5cf6', secondary: '#64748b' }  // 紫色
+                ];
+                
+                const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+                
+                // 在实际应用中，您可以通过API更新播放器主题
+                alert('在实际应用中，您可以通过API更新播放器主题为: ' + JSON.stringify(randomTheme));
+            });
+        });
+    </script>
+</body>
+</html>
